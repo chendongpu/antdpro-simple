@@ -4,8 +4,21 @@ import React from 'react';
 import { history, connect } from 'umi';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
+import {getTodoLists} from "../../services/todo";
 
 class AvatarDropdown extends React.Component {
+  state={
+    todoNum:0
+  }
+
+  async componentDidMount(){
+    const todoList= await getTodoLists();
+
+    const todoNum=todoList.filter(item=>item.status===0).length;
+
+    this.setState({todoNum});
+  }
+
   onMenuClick = (event) => {
     const { key } = event;
       if (key === 'todo') {
@@ -56,7 +69,7 @@ class AvatarDropdown extends React.Component {
           <Menu.Item key="todo">
               <LogoutOutlined />
               待办事项
-            <Badge count={5} offset={[10,0]} />
+            <Badge count={this.state.todoNum} offset={[10,0]} />
           </Menu.Item>
 
         <Menu.Item key="logout">
@@ -70,7 +83,7 @@ class AvatarDropdown extends React.Component {
         <span className={`${styles.action} ${styles.account}`}>
           <Avatar size="small" className={styles.avatar} src={currentUser.avatar} alt="avatar" />
           <span className={`${styles.name} anticon`}>{currentUser.name}
-              <Badge count={5} dot={true} />
+              <Badge count={this.state.todoNum} dot={true} />
           </span>
         </span>
       </HeaderDropdown>
