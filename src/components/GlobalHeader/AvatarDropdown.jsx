@@ -12,11 +12,20 @@ class AvatarDropdown extends React.Component {
   }
 
   async componentDidMount(){
-    const todoList= await getTodoLists();
+    //   //方法一:发送请求获取数据
+    // const todoList= await getTodoLists();
+    //
+    // const todoNum=todoList.filter(item=>item.status===0).length;
+    //
+    // this.setState({todoNum});
 
-    const todoNum=todoList.filter(item=>item.status===0).length;
+      //方法二:使用model获取数据
 
-    this.setState({todoNum});
+      this.props.dispatch({
+          type:'todo/getTodoList',
+          payload:null
+      });
+
   }
 
   onMenuClick = (event) => {
@@ -43,6 +52,10 @@ class AvatarDropdown extends React.Component {
   };
 
   render() {
+
+    //console.log("todo:",this.props.todo);
+    const todo=this.props.todo;
+    const todoNum=todo.todoList.filter(item=>item.status===0).length;
     const {
       currentUser = {
         avatar: '',
@@ -69,7 +82,7 @@ class AvatarDropdown extends React.Component {
           <Menu.Item key="todo">
               <LogoutOutlined />
               待办事项
-            <Badge count={this.state.todoNum} offset={[10,0]} />
+            <Badge count={todoNum} offset={[10,0]} />
           </Menu.Item>
 
         <Menu.Item key="logout">
@@ -83,7 +96,7 @@ class AvatarDropdown extends React.Component {
         <span className={`${styles.action} ${styles.account}`}>
           <Avatar size="small" className={styles.avatar} src={currentUser.avatar} alt="avatar" />
           <span className={`${styles.name} anticon`}>{currentUser.name}
-              <Badge count={this.state.todoNum} dot={true} />
+              <Badge count={todoNum} dot={true} />
           </span>
         </span>
       </HeaderDropdown>
@@ -101,6 +114,6 @@ class AvatarDropdown extends React.Component {
   }
 }
 
-export default connect(({ user }) => ({
-  currentUser: user.currentUser,
+export default connect(({ user,todo }) => ({
+  currentUser: user.currentUser, todo
 }))(AvatarDropdown);
