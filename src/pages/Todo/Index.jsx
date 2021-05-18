@@ -3,7 +3,7 @@ import { Button, Modal,Alert,message } from 'antd';
 import { DownOutlined, PlusOutlined } from '@ant-design/icons';
 import ProTable, { TableDropdown } from '@ant-design/pro-table';
 import {PageContainer} from '@ant-design/pro-layout';
-import {add, getTodoLists} from "../../services/todo";
+import {add, edit, getTodoLists} from "../../services/todo";
 import {connect} from 'dva';
 import ProForm, { ProFormText } from '@ant-design/pro-form';
 
@@ -37,6 +37,19 @@ const Todo= (props) => {
 
     };
 
+    const changeStatus=async (id,status)=>{
+        const res=await edit({id,status});
+        if(res.code===0){
+            props.dispatch({
+                type:'todo/getTodoList',
+                payload:null
+            });
+            message.success(res.message);
+        }else{
+            message.error("error");
+        }
+    }
+
 
 
 
@@ -62,11 +75,21 @@ const Todo= (props) => {
         },
         {
             title: '修改状态',
-            render: () => [
-                <a key="link">待办 </a>,
-                <a key="link2">完成 </a>,
-                <a key="link3">取消</a>
-            ],
+            render: (_,record) => {
+                let editOperation=[];
+                if(record.status!==0){
+                    editOperation.push(<a onClick={()=>{changeStatus(record.id,0)}} key={0}>待办 </a>)
+                }
+                if(record.status!==1){
+                    editOperation.push(<a onClick={()=>{changeStatus(record.id,1)}} key={0} key={1}>完成 </a>)
+                }
+                if(record.status!==2){
+                    editOperation.push(<a onClick={()=>{changeStatus(record.id,2)}} key={0} key={2}>取消 </a>)
+                }
+                return editOperation;
+
+            }
+
         },
     ];
 

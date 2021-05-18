@@ -9,4 +9,12 @@ export const add = async (data)=>{
         data
     };
     return request.post(url,options);
-}
+};
+
+export const edit = async (data)=>{
+    const url='/api/edit';
+    const options={
+        data
+    };
+    return request.put(url,options);
+};

@@ -20,5 +20,18 @@ export default {
             code:0,
             message:'添加成功！'
         });
+    },
+    'PUT /api/edit': (req,res)=>{
+        const{id,status}=req.body;
+        list = list.map((item,index)=>{
+            if(item.id===id){
+                list[index].status=status;
+            }
+            return item;
+        });
+        res.send({
+            code:0,
+            message:'修改成功！'
+        });
     }
 };
