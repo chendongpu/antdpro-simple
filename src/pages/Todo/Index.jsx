@@ -4,8 +4,9 @@ import { DownOutlined, PlusOutlined } from '@ant-design/icons';
 import ProTable, { TableDropdown } from '@ant-design/pro-table';
 import {PageContainer} from '@ant-design/pro-layout';
 import {getTodoLists} from "../../services/todo";
+import {connect} from 'dva';
 
-export default () => {
+const Todo= (props) => {
 
   const[data,setData]=useState([]);
 
@@ -16,9 +17,9 @@ export default () => {
   ]
 
   useEffect(async ()=>{
-    const resData=await getTodoLists();
-    setData(resData);
-  },[])
+    // const resData=await getTodoLists();
+    setData(props.todo.todoList);
+  },[]);
 
 
 
@@ -51,8 +52,8 @@ export default () => {
         <PageContainer>
             <ProTable
                 columns={columns}
-               // dataSource={data}
-                request={async ()=>({data:await getTodoLists()})}
+                dataSource={data}
+                //request={async ()=>({data:await getTodoLists()})}
                 rowKey="id"
                 search={false}
                 dateFormatter="string"
@@ -66,3 +67,5 @@ export default () => {
         </PageContainer>
     );
 };
+
+export default connect(({todo})=>({todo}))(Todo);
